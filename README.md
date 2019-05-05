@@ -9,7 +9,7 @@ Put this repo in your &rtp or install by your favorite vim plugin manager such a
 - [osyo-manga/vim-anzo](http://github.com/osyo-manga/vim-anzu)
 
 ## Usage
-:Denite anzu:{pattern}
+:Denite anzu[:{pattern}]
 
 ## Example
 
