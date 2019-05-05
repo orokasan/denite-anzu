@@ -6,7 +6,7 @@ Put this repo in your &rtp or install by your favorite vim plugin manager such a
 
 ### Requirement
 - [Shougo/denite.nvim](http://github.com/Shougo/denite.nvim)
-- [osyo-manga/vim-anzo](http://github.com/osyo-manga/vim-anzu)
+- [osyo-manga/vim-anzu](http://github.com/osyo-manga/vim-anzu)
 
 ## Usage
 :Denite anzu[:{pattern}]
