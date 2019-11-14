@@ -28,9 +28,10 @@ class Source(Base):
         if len(context['args']) >= 1 :
             args = context['args'][0]
         else: 
+#            args = self.vim.call('matchstr', status, '.*\ze(\d*/\d*)' )
             args = ''
         bufnr = context['__bufnr']
-        loclist = self.vim.call('anzu#searchpos', args, 0)
+        loclist = self.vim.call('anzu#searchpos', args, bufnr, 2)
         for loc in loclist:
             lines = self.vim.call('getbufline','%', loc[0] )
             abbr = '[%d:%d] %s' % (loc[0], loc[1], lines[0])
