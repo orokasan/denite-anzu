@@ -3,11 +3,13 @@
 
 from .base import Base
 from denite.util import abspath, Nvim, UserContext, Candidates
-#ANZU_NUMBER_SYNTAX = (
-#    'syntax match deniteSource_lineNumber '
-#    r'/\d\+\(:\d\+\)\?/ '
-#    'contained containedin=')
-#ANZU_NUMBER_HIGHLIGHT = 'highlight default link deniteSource_lineNumber LineNR'
+
+# ref. Denite-line source
+ANZU_NUMBER_SYNTAX = (
+    'syntax match deniteSource_lineNumber '
+    r'/\d\+\(:\d\+\)\?/ '
+    'contained containedin=')
+ANZU_NUMBER_HIGHLIGHT = 'highlight default link deniteSource_lineNumber LineNR'
 
 class Source(Base):
 
@@ -28,7 +30,6 @@ class Source(Base):
         if len(context['args']) >= 1 :
             args = context['args'][0]
         else: 
-#            args = self.vim.call('matchstr', status, '.*\ze(\d*/\d*)' )
             args = ''
         bufnr = context['__bufnr']
         loclist = self.vim.call('anzu#searchpos', args, bufnr, 2)
@@ -47,6 +48,6 @@ class Source(Base):
             candidates += line
         return candidates
 
-#    def highlight(self):
-#        self.vim.command(ANZU_NUMBER_SYNTAX + self.syntax_name)
-#        self.vim.command(ANZU_NUMBER_HIGHLIGHT)
+    def highlight(self) -> None:
+        self.vim.command(ANZU_NUMBER_SYNTAX + self.syntax_name)
+        self.vim.command(ANZU_NUMBER_HIGHLIGHT)
