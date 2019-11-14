@@ -5,7 +5,6 @@ denite.nvim source for vim-anzu
 Put this repo in your &rtp or install by your favorite vim plugin manager such as [Shougo/dein.vim](http://github.com/Shougo/dein.vim)
 
 ### Requirement
-Currently this plagin doesn't work in Neovim.
 - [Shougo/denite.nvim](http://github.com/Shougo/denite.nvim)
 - [osyo-manga/vim-anzu](http://github.com/osyo-manga/vim-anzu)
 
