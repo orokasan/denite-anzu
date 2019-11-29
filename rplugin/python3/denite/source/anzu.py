@@ -4,12 +4,36 @@
 from .base import Base
 from denite.util import abspath, Nvim, UserContext, Candidates
 
-# ref. Denite-line source
-ANZU_NUMBER_SYNTAX = (
-    'syntax match deniteSource_lineNumber '
-    r'/\d\+\(:\d\+\)\?/ '
-    'contained containedin=')
-ANZU_NUMBER_HIGHLIGHT = 'highlight default link deniteSource_lineNumber LineNR'
+
+HIGHLIGHT_SYNTAX: List[Dict[str, Union[str, bool]]] = [
+    {"name": "Prefix", "link": "Constant", "re": r"\v\d+\s[\ ahu%#+]+"},
+    {"name": "Info", "link": "PreProc", "re": r"\v\[[^]]*\]"},
+    {"name": "Modified", "link": "Statement", "re": "+", "in": "Prefix"},
+    {"name": "Time", "link": "Statement", "re": r"\v\([^)]*\)"},
+    {"name": "File", "link": "Function", "re": r"\v[^/ [\]]+\ze\s(\[|\()"},
+    {"name": "File", "link": "Function", "re": r"\v[^/ [\]]+\ze\n"},
+    {"name": "Special", "link": "Special", "re": r"\v\$[A-Z]+"},
+    {"name": "Icon", "link": "String", "re": r"\].\["},
+    {"name": "IconConceal", "is_conceal": True, "in": "Icon", "re": r"[[\]]"},
+]
+
+
+def highlight(vim: Nvim, syntax_name: str) -> None:
+    for syn in HIGHLIGHT_SYNTAX:
+        conceal = "conceal " if syn.get("is_conceal") else ""
+        containedin = syntax_name + ("_" + str(syn["in"]) if "in" in syn else "")
+        vim.command(
+            "syntax match {0}_{1} /{2}/ {3}contained containedin={4}".format(
+                syntax_name, syn["name"], syn["re"], conceal, containedin
+            )
+        )
+        if not syn.get("is_conceal"):
+            vim.command(
+                "highlight default link {0}_{1} {2}".format(
+                    syntax_name, syn["name"], syn["link"]
+                )
+            )
+
 
 class Source(Base):
 
@@ -49,5 +73,4 @@ class Source(Base):
         return candidates
 
     def highlight(self) -> None:
-        self.vim.command(ANZU_NUMBER_SYNTAX + self.syntax_name)
-        self.vim.command(ANZU_NUMBER_HIGHLIGHT)
+        highlight(self.vim, self.syntax_name)
