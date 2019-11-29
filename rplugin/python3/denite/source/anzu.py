@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from .base import Base
+from typing import List, Dict, Union
 from denite.util import abspath, Nvim, UserContext, Candidates
 
 
@@ -44,32 +45,38 @@ class Source(Base):
         self.sorters = []
         self.matcher = []
 
-    def on_init(self, context: UserContext) -> Candidates :
+    def on_init(self, context: UserContext) -> Candidates:
         context['__bufnr'] = str(self.vim.current.buffer.number)
 
     def gather_candidates(self, context: UserContext) -> None:
         candidates: Candidates = []
-        status = self.vim.call('anzu#search_status')
+        # status = self.vim.call('anzu#search_status')
         args = []
-        if len(context['args']) >= 1 :
+        if len(context['args']) >= 1:
             args = context['args'][0]
-        else: 
+        else:
             args = ''
         bufnr = context['__bufnr']
         loclist = self.vim.call('anzu#searchpos', args, bufnr, 2)
+        start = 0
         for loc in loclist:
-            lines = self.vim.call('getbufline','%', loc[0] )
-            abbr = '[%d:%d] %s' % (loc[0], loc[1], lines[0])
-            line =  [{
-                    'word': lines[0],
-                    'abbr': abbr,
-                    'action__bufnr': bufnr,
-                    'action__path':abspath(self.vim, self.vim.current.buffer.name),
-                    'action__line': loc[0],
-                    'action__col': loc[1],
-                    'action__pattern': args
-                    }]
-            candidates += line
+            if start == loc[0]:
+                pass
+            else:
+                start = loc[0]
+                lines = self.vim.call('getbufline', '%', loc[0])
+                abbr = '[%d:%d] %s' % (loc[0], loc[1], lines[0])
+                line = [{
+                        'word': lines[0],
+                        'abbr': abbr,
+                        'action__bufnr': bufnr,
+                        'action__path':
+                            abspath(self.vim, self.vim.current.buffer.name),
+                        'action__line': loc[0],
+                        'action__col': loc[1],
+                        'action__pattern': args
+                        }]
+                candidates += line
         return candidates
 
     def highlight(self) -> None:
